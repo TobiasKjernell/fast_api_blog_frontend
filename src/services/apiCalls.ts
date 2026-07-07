@@ -92,9 +92,17 @@ export interface IUpdatePost {
     content: string
 }
 
-export const getPosts = async (): Promise<IGetPost[]> => {  
-    return fetchApi<IGetPost[]>(`${API}/api/posts`)
-}           
+export interface IPaginatedPosts {
+    posts: IGetPost[]
+    total: number
+    skip: number
+    limit: number
+    has_more: boolean
+}
+
+export const getPosts = async (skip = 0, limit = 10): Promise<IPaginatedPosts> => {
+    return fetchApi<IPaginatedPosts>(`${API}/api/posts?skip=${skip}&limit=${limit}`)
+}
 
 export const getPost = async (id: number): Promise<IGetPost> => {
     return fetchApi<IGetPost>(`${API}/api/posts/${id}`)
