@@ -6,6 +6,7 @@ import Posts from "./pages/Posts"
 import UserPosts from "./pages/UserPosts"
 import Login from "./pages/Login"
 import Register from "./pages/Register"
+import ResetPassword from "./pages/ResetPassword"
 import AccountSettings from "./pages/AccountSettings"
 import { AuthProvider } from "./context/AuthContext"
 import ProtectedRoute from "./components/ProtectedRoute"
@@ -27,6 +28,7 @@ function App() {
               </Route>
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="/account" element={<AccountSettings />} />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Route>

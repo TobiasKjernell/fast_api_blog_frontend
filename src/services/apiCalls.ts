@@ -183,3 +183,28 @@ export const deleteProfilePicture = async (user_id: number): Promise<IUser> => {
         method: 'DELETE'
     })
 }
+
+interface IMessageResponse {
+    message: string
+}
+
+export const forgotPassword = async (email: string): Promise<IMessageResponse> => {
+    return fetchApi<IMessageResponse>(`${API}/api/users/forgot-password`, {
+        method: 'POST',
+        body: { email }
+    })
+}
+
+export const resetPassword = async (token: string, new_password: string): Promise<IMessageResponse> => {
+    return fetchApi<IMessageResponse>(`${API}/api/users/reset-password`, {
+        method: 'POST',
+        body: { token, new_password }
+    })
+}
+
+export const changePassword = async (current_password: string, new_password: string): Promise<IMessageResponse> => {
+    return fetchApi<IMessageResponse>(`${API}/api/users/change-password`, {
+        method: 'POST',
+        body: { current_password, new_password }
+    })
+}

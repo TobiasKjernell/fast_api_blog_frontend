@@ -1,7 +1,9 @@
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate, Link } from 'react-router'
 import { useAuth } from '../../context/AuthContext'
 import { ApiError } from '../../services/apiCalls'
+import ForgotPasswordModal from '../../components/ForgotPasswordModal'
 
 interface LoginForm {
     username: string
@@ -14,6 +16,7 @@ const Login = () => {
     const { login } = useAuth()
     const navigate = useNavigate()
     const { register, handleSubmit, formState: { errors, isSubmitting }, setError } = useForm<LoginForm>()
+    const [showForgotPassword, setShowForgotPassword] = useState(false)
 
     const onSubmit = async (data: LoginForm) => {
         try {
@@ -57,7 +60,16 @@ const Login = () => {
                     </div>
 
                     <div className="flex flex-col gap-1.5">
-                        <label className="text-ink-muted text-sm font-medium">Password</label>
+                        <div className="flex items-center justify-between">
+                            <label className="text-ink-muted text-sm font-medium">Password</label>
+                            <button
+                                type="button"
+                                onClick={() => setShowForgotPassword(true)}
+                                className="text-accent-soft text-sm hover:underline cursor-pointer"
+                            >
+                                Forgot password?
+                            </button>
+                        </div>
                         <input
                             type="password"
                             {...register('password', { required: 'Password is required' })}
@@ -81,6 +93,10 @@ const Login = () => {
                     </p>
                 </form>
             </div>
+
+            {showForgotPassword && (
+                <ForgotPasswordModal toggleOffModal={() => setShowForgotPassword(false)} />
+            )}
         </div>
     )
 }

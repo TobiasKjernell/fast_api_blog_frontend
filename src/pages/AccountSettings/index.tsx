@@ -3,7 +3,8 @@ import { useForm } from 'react-hook-form'
 import { useAuth } from '../../context/AuthContext'
 import { useUploadAvatar } from '../../hooks/useUploadAvatar'
 import { useDeleteAvatar } from '../../hooks/useDeleteAvatar'
-import { API } from '../../services/apiCalls'
+import { useChangePassword } from '../../hooks/useChangePassword'
+import { API, ApiError } from '../../services/apiCalls'
 import Sidebar from '../../components/Sidebar'
 
 interface InfoForm {
@@ -34,15 +35,27 @@ const AccountSettings = () => {
     })
 
     const passwordForm = useForm<PasswordForm>()
+    const changePassword = useChangePassword()
 
     const onUpdateInfo = (data: InfoForm) => {
         // TODO: wire up to backend
         console.log('update info', data)
     }
 
-    const onChangePassword = (data: PasswordForm) => {
-        // TODO: wire up to backend
-        console.log('change password', data)
+    const onChangePassword = async (data: PasswordForm) => {
+        try {
+            await changePassword.mutateAsync({
+                current_password: data.currentPassword,
+                new_password: data.newPassword
+            })
+            passwordForm.reset()
+        } catch (e) {
+            if (e instanceof ApiError && e.statusCode === 400) {
+                passwordForm.setError('currentPassword', { message: 'Current password is incorrect' })
+            } else {
+                passwordForm.setError('root', { message: 'Something went wrong, please try again' })
+            }
+        }
     }
 
     const clearAvatarSelection = () => {
@@ -176,6 +189,9 @@ const AccountSettings = () => {
                         <form onSubmit={passwordForm.handleSubmit(onChangePassword)} className="flex flex-col gap-4">
                             {passwordForm.formState.errors.root && (
                                 <p className="text-danger text-sm bg-danger-soft/10 border border-danger-soft/30 rounded-lg px-3 py-2">{passwordForm.formState.errors.root.message}</p>
+                            )}
+                            {changePassword.isSuccess && (
+                                <p className="text-sm bg-accent-soft/10 border border-accent-soft/30 rounded-lg px-3 py-2 text-ink-muted">Your password has been updated.</p>
                             )}
                             <div className="flex flex-col gap-1.5">
                                 <label className={labelClass}>Current Password</label>

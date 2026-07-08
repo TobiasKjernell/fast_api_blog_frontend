@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Link } from "react-router"
+import { Link, useNavigate } from "react-router"
 import CreatePostModal from "../CreatePostModal"
 import { useAuth } from "../../context/AuthContext"
 import Avatar from "../Avatar"
@@ -8,6 +8,7 @@ import { API } from "../../services/apiCalls"
 const Header = () => {
     const [createPostVisible, setCreatePostVisible] = useState<boolean>(false)
     const { isAuthenticated, user, logout } = useAuth()
+    const navigate = useNavigate()
 
     return (
         <header className="sticky top-0 z-20 glass border-b border-border">
@@ -59,7 +60,7 @@ const Header = () => {
                             </Link>
 
                             <button
-                                onClick={logout}
+                                onClick={() => { logout(); navigate('/login', { replace: true }) }}
                                 className="text-sm font-medium text-ink-muted hover:text-ink px-3 py-2 rounded-lg cursor-pointer transition-colors"
                             >
                                 Logout

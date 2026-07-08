@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useEffect, type ReactNode } from 'react'
 import { getMe, login as apiLogin } from '../services/apiCalls'
 import type { IUser } from '../services/apiCalls'
+import { useNavigate } from 'react-router'
 
 interface AuthContextType {
     user: IUser | null
@@ -30,7 +31,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const login = async (username: string, password: string) => {
         const { access_token } = await apiLogin(username, password)
         localStorage.setItem('token', access_token)
-        setToken(access_token)
+        setToken(access_token)  
     }
 
     const logout = () => {
